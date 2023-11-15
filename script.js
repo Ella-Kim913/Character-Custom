@@ -1,48 +1,36 @@
+var lottieAnimations = {
+    'wrapperA': { path: 'https://lottie.host/9b52b22b-d323-4dee-9864-7e6e45d1b441/8lZZLe4z0V.json', loaded: false },
+    'wrapperB': { path: 'https://lottie.host/400a06bb-d0ae-4af3-bdb0-079ec51765a3/FFERy9aTrH.json', loaded: false },
+    // Add more wrappers as needed
+};
 
-var isLottieALoaded = false;
-var isLottieBLoaded = false;
+function loadAndToggleLottie(wrapperId) {
+    var wrapper = document.getElementById(wrapperId);
+    var animation = lottieAnimations[wrapperId];
 
-function loadLottieAnimation(container, path) {
-    lottie.loadAnimation({
-        container: container,
-        renderer: 'svg',
-        loop: true,
-        autoplay: true,
-        path: path
-    });
-}
-
-function loadAndToggleLottieA() {
-    var wrapperA = document.getElementById('wrapperA');
-    if (!isLottieALoaded) {
-        loadLottieAnimation(document.getElementById('lottieA'), 'https://lottie.host/9b52b22b-d323-4dee-9864-7e6e45d1b441/8lZZLe4z0V.json');
-        isLottieALoaded = true;
-        wrapperA.style.display = 'block';
-    } else {
-        wrapperA.style.display = wrapperA.style.display === 'none' ? 'block' : 'none';
+    if (!animation.loaded) {
+        lottie.loadAnimation({
+            container: document.getElementById(wrapperId.replace('wrapper', 'lottie')),
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            path: animation.path
+        });
+        animation.loaded = true;
     }
+
+    wrapper.style.display = wrapper.style.display === 'none' ? 'block' : 'none';
 }
 
-function loadAndToggleLottieB() {
-    var wrapperB = document.getElementById('wrapperB');
-    if (!isLottieBLoaded) {
-        loadLottieAnimation(document.getElementById('lottieB'), 'https://lottie.host/400a06bb-d0ae-4af3-bdb0-079ec51765a3/FFERy9aTrH.json');
-        isLottieBLoaded = true;
-        wrapperB.style.display = 'block';
-    } else {
-        wrapperB.style.display = wrapperB.style.display === 'none' ? 'block' : 'none';
-    }
-}
 
-// Initialize the wrappers to be hidden
-document.getElementById('wrapperA').style.display = 'none';
-document.getElementById('wrapperB').style.display = 'none';
+
+
 
 
 function addDeleteButton(wrapperId) {
     var wrapper = document.getElementById(wrapperId);
     var deleteBtn = document.createElement('button');
-    deleteBtn.innerHTML = 'Delete';
+    deleteBtn.innerHTML = '❌';
     deleteBtn.className = 'delete-btn';
     deleteBtn.onclick = function () {
         wrapper.remove();
@@ -88,7 +76,6 @@ function draggable(el) {
 }
 
 
-// Existing draggable function
 function makeResizable(el) {
     const resizeHandle = el.querySelector('.resize-handle');
 
@@ -113,17 +100,54 @@ function makeResizable(el) {
             document.removeEventListener('mouseup', stopResize);
         }
 
-        //document.addEventListener('mousemove', resize);
-        //document.addEventListener('mouseup', stopResize);
     });
 }
 
+// Common function to initialize wrappers
+function initializeWrapper(wrapperId) {
+    var wrapper = document.getElementById(wrapperId);
+    wrapper.style.display = 'none';
+    draggable(wrapper);
+    makeResizable(wrapper);
+    addDeleteButton(wrapperId);
+}
 
-// Apply draggable and resizable to the elements
-draggable(document.getElementById('wrapperA'));
-makeResizable(document.getElementById('wrapperA'));
-addDeleteButton('wrapperA');
+// Initialize all wrappers
+Object.keys(lottieAnimations).forEach(initializeWrapper);
 
-draggable(document.getElementById('wrapperB'));
-makeResizable(document.getElementById('wrapperB'));
-addDeleteButton('wrapperB');
+
+
+document.getElementById('imageUpload').addEventListener('change', function (event) {
+    var file = event.target.files[0];
+    var reader = new FileReader();
+    reader.onload = function (e) {
+        createImageWrapper(e.target.result);
+    };
+    reader.readAsDataURL(file);
+});
+
+function createImageWrapper(imageSrc) {
+    var wrapper = document.createElement('div');
+    wrapper.className = 'animation-wrapper';
+    wrapper.style.position = 'relative';
+
+    // Generate a unique ID for the new wrapper
+    var wrapperId = 'imageWrapper' + Date.now();
+    wrapper.id = wrapperId;
+
+    var img = document.createElement('img');
+    img.src = imageSrc;
+    img.className = 'animation-container';
+
+    var resizeHandle = document.createElement('div');
+    resizeHandle.className = 'resize-handle';
+
+    wrapper.appendChild(img);
+    wrapper.appendChild(resizeHandle);
+
+    document.body.appendChild(wrapper);
+
+    draggable(wrapper);
+    makeResizable(wrapper);
+    addDeleteButton(wrapperId); // Reuse addDeleteButton function
+}
