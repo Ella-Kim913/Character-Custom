@@ -12,8 +12,10 @@ function addDeleteButton(wrapperId) {
 
 function draggable(el) {
     var elementX = 0, elementY = 0;
+    var isDragging = false;
 
     function handleDragStart(event) {
+        isDragging = true;
         var mouseX = event.clientX || event.touches[0].clientX;
         var mouseY = event.clientY || event.touches[0].clientY;
 
@@ -23,18 +25,22 @@ function draggable(el) {
         document.addEventListener('touchend', stopDragging);
 
         function handleDrag(event) {
+            if (!isDragging) return;
             var deltaX = (event.clientX || event.touches[0].clientX) - mouseX;
             var deltaY = (event.clientY || event.touches[0].clientY) - mouseY;
+
+            requestAnimationFrame(function () {
+                elementX += deltaX;
+                elementY += deltaY;
+                el.style.transform = `translate(${elementX}px, ${elementY}px)`;
+            });
+
             mouseX = event.clientX || event.touches[0].clientX;
             mouseY = event.clientY || event.touches[0].clientY;
-
-            elementX += deltaX;
-            elementY += deltaY;
-            el.style.left = elementX + 'px';
-            el.style.top = elementY + 'px';
         }
 
         function stopDragging() {
+            isDragging = false;
             document.removeEventListener('mousemove', handleDrag);
             document.removeEventListener('touchmove', handleDrag);
             document.removeEventListener('mouseup', stopDragging);
@@ -45,6 +51,8 @@ function draggable(el) {
     el.addEventListener('mousedown', handleDragStart);
     el.addEventListener('touchstart', handleDragStart);
 }
+
+
 
 
 function makeResizable(el) {

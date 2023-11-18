@@ -22,3 +22,14 @@ function loadAndToggleLottie(wrapperId) {
     wrapper.style.display = wrapper.style.display === 'none' ? 'block' : 'none';
 }
 
+window.addEventListener('load', () => {
+    lottie.loadAnimation({
+        container: document.getElementById('lottieContainer'),
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        path: 'https://lottie.host/9b52b22b-d323-4dee-9864-7e6e45d1b441/8lZZLe4z0V.json'
+    });
+});
+
+

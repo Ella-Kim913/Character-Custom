@@ -10,11 +10,28 @@
 </head>
 
 <body>
+
+
+    <div id="lottieContainer" class="lottie-container"></div>
+
+
+    <!-- Dawing -->
+    <canvas id="drawingCanvas"></canvas>
+
+    <button id="smallBrush">Small Brush</button>
+    <button id="mediumBrush">Medium Brush</button>
+    <button id="largeBrush">Large Brush</button>
+
+    <button id="eraserButton">Eraser</button>
+
+
+    <input type="color" id="colorPicker">
+
+
+
     <button onclick="loadAndToggleLottie('wrapperA')">라마라마</button>
     <button onclick="loadAndToggleLottie('wrapperB')">선글라스</button>
     <input type="file" id="imageUpload" accept="image/*">
-
-
 
     <div id="wrapperA" class="animation-wrapper">
         <div id="lottieA" class="animation-container"></div>
@@ -25,10 +42,15 @@
         <div class="resize-handle"></div>
     </div>
 
+
+
     <script src="script.js"></script>
     <script src="LottieAnimations.js"></script>
     <script src="WrapperUtils.js"></script>
     <script src="ImageUploadHandler.js"></script>
+    <script src="DrawingCanvas.js"></script>
+
+
 
 </body>
 
