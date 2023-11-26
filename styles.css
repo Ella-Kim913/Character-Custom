@@ -74,3 +74,9 @@ button.active {
     overflow: hidden;
     /* Hide overflow */
 }
+
+.background-on {
+    background-color: teal;
+    /* Your desired background color */
+    /* For a background image, use: background-image: url('path/to/your/image.jpg'); */
+}

@@ -35,30 +35,48 @@ function makeDraggable(element) {
     let posX = 0, posY = 0, posInitX = 0, posInitY = 0;
 
     element.onmousedown = dragMouseDown;
+    element.ontouchstart = dragMouseDown; // Add touchstart event
 
     function dragMouseDown(e) {
         e.preventDefault();
-        posInitX = e.clientX;
-        posInitY = e.clientY;
+        if (e.type === "touchstart") {
+            posInitX = e.touches[0].clientX;
+            posInitY = e.touches[0].clientY;
+        } else {
+            posInitX = e.clientX;
+            posInitY = e.clientY;
+        }
         document.onmouseup = closeDragElement;
+        document.ontouchend = closeDragElement; // Add touchend event
         document.onmousemove = elementDrag;
+        document.ontouchmove = elementDrag; // Add touchmove event
     }
 
     function elementDrag(e) {
         e.preventDefault();
-        posX = posInitX - e.clientX;
-        posY = posInitY - e.clientY;
-        posInitX = e.clientX;
-        posInitY = e.clientY;
+        if (e.type === "touchmove") {
+            posX = posInitX - e.touches[0].clientX;
+            posY = posInitY - e.touches[0].clientY;
+            posInitX = e.touches[0].clientX;
+            posInitY = e.touches[0].clientY;
+        } else {
+            posX = posInitX - e.clientX;
+            posY = posInitY - e.clientY;
+            posInitX = e.clientX;
+            posInitY = e.clientY;
+        }
         element.style.top = (element.offsetTop - posY) + "px";
         element.style.left = (element.offsetLeft - posX) + "px";
     }
 
     function closeDragElement() {
         document.onmouseup = null;
+        document.ontouchend = null; // Clear touchend event
         document.onmousemove = null;
+        document.ontouchmove = null; // Clear touchmove event
     }
 }
+
 
 makeDraggable(speechBubble);
 
